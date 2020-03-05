@@ -26,7 +26,7 @@ export class DigitApiService {
       .visor()
       .surface({ name: "Input Data Example", tab: "Input Data" });
 
-    const examples = data.nextTestBatch(20);
+    const examples = data.nextTestBatch(2000);
     const numExamples = examples.xs.shape[0];
 
     for (let i = 0; i < numExamples; i++) {
@@ -55,6 +55,9 @@ export class DigitApiService {
     const model = this.getModel();
     tfvis.show.modelSummary({ name: "Model architecture" }, model);
     await this.train(model, data);
+
+    // Save model and weights
+    await model.save('downloads://digit-recognition');
 
     await this.showAccuracy(model, data);
     await this.showConfusion(model, data);
@@ -126,8 +129,8 @@ export class DigitApiService {
     };
     const fitCallbacks = tfvis.show.fitCallbacks(container, metrics);
     const BATCH_SIZE = 512;
-    const TRAIN_DATA_SIZE = 5500;
-    const TEST_DATA_SIZE = 1000;
+    const TRAIN_DATA_SIZE = 55000;
+    const TEST_DATA_SIZE = 10000;
 
     const [trainXs, trainYs] = tf.tidy(() => {
       const d = data.nextTestBatch(TRAIN_DATA_SIZE);
